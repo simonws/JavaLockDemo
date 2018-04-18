@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">JavaLockDemo</string>
+    <string name="barraier">栅栏</string>
+    <string name="entry_lock">重入锁</string>
+</resources>
