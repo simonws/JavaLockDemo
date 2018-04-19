@@ -12,7 +12,6 @@ import java.util.concurrent.locks.ReentrantLock;
 
 /**
  * BoundedBuffer 是一个定长100的集合，当集合中没有元素时，take方法需要等待，直到有元素时才返回元素 当其中的元素数达到最大值时，要等待直到元素被take之后才执行put的操作
- * 
  */
 class BoundedBuffer {
     private String TAG = "BoundedBuffer";
@@ -21,7 +20,8 @@ class BoundedBuffer {
     final Condition emptyCondition = lock.newCondition();
 
     final Object[] items = new Object[5];
-    int putptr, takeptr, count;
+    int currentTop = -1;
+    int count = 0;
 
     public void put(Object x) throws InterruptedException {
         Log.d(TAG, "put wait lock");
@@ -32,11 +32,12 @@ class BoundedBuffer {
                 Log.d(TAG, "put buffer full, please wait");
                 fullCondition.await();
             }
-            Log.d(TAG, "put buffer value = " + x + " position=" + putptr);
-            items[putptr] = x;
-            if (++putptr == items.length)
-                putptr = 0;
+
+            items[++currentTop] = x;
+//            if (++putptr == items.length)
+//                putptr = 0;
             ++count;
+            Log.d(TAG, "put buffer value = " + x + " currentTop=" + currentTop + " count=" + count + " == " + Thread.currentThread());
             emptyCondition.signal();
         } finally {
             lock.unlock();
@@ -54,11 +55,12 @@ class BoundedBuffer {
                 emptyCondition.await();
             }
 
-            Object x = items[takeptr];
-            Log.d(TAG, "take buffer value = " + x + " position=" + takeptr);
-            if (++takeptr == items.length)
-                takeptr = 0;
+            Object x = items[currentTop--];
+
+//            if (++takeptr == items.length)
+//                takeptr = 0;
             --count;
+            Log.d(TAG, "take buffer value = " + x + " currentTop=" + currentTop + " count=" + count + " == " + Thread.currentThread());
             fullCondition.signal();
             return x;
         } finally {

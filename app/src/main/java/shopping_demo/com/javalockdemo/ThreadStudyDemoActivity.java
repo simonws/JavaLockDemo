@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.View;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
@@ -12,29 +13,48 @@ import java.util.concurrent.CyclicBarrier;
  * Created by ws on 18-2-24.
  */
 
-public class ThreadStudyDemo extends Activity {
+public class ThreadStudyDemoActivity extends Activity implements View.OnClickListener {
     private static final String TAG = "ThreadStudy_Demo";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setContentView(android.R.layout.list_content);
+        setContentView(R.layout.common_lock_layout);
         super.onCreate(savedInstanceState);
-//        new Thread1().start();
-//        new Thread2().start();
-//        testBarrier();
-        Thread yieldThread1 = new YieldThread("yield1");
-        Thread yieldThread2 = new YieldThread("yield2");
-        yieldThread1.start();
-        yieldThread2.start();
     }
 
-    public void testCountDownLatch(String[] args) throws InterruptedException {
+    public void testCountDownLatch() throws InterruptedException {
         CountDownLatch countDownLatch = new CountDownLatch(5);
         for (int i = 0; i < 5; i++) {
             new Thread(new CountDownReadNum(i, countDownLatch)).start();
         }
         countDownLatch.await();
         System.out.println("线程执行结束。。。。");
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.btn_barrier:
+                testBarrier();
+                break;
+            case R.id.btn_countdown_latcher:
+                try {
+                    testCountDownLatch();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.btn_yield:
+                Thread yieldThread1 = new YieldThread("yield1");
+                Thread yieldThread2 = new YieldThread("yield2");
+                yieldThread1.start();
+                yieldThread2.start();
+                break;
+            default:
+                break;
+
+
+        }
     }
 
     static class CountDownReadNum implements Runnable {
@@ -100,11 +120,11 @@ public class ThreadStudyDemo extends Activity {
         @Override
         public void run() {
             while (true) {
-                synchronized (ThreadStudyDemo.this) {
+                synchronized (ThreadStudyDemoActivity.this) {
                     Log.d(TAG, "Thread1 run");
                     try {
-                        ThreadStudyDemo.this.notify();
-                        ThreadStudyDemo.this.wait();
+                        ThreadStudyDemoActivity.this.notify();
+                        ThreadStudyDemoActivity.this.wait();
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
@@ -118,11 +138,11 @@ public class ThreadStudyDemo extends Activity {
         public void run() {
             while (true) {
                 while (true) {
-                    synchronized (ThreadStudyDemo.this) {
+                    synchronized (ThreadStudyDemoActivity.this) {
                         Log.d(TAG, "Thread2 run");
                         try {
-                            ThreadStudyDemo.this.notify();
-                            ThreadStudyDemo.this.wait();
+                            ThreadStudyDemoActivity.this.notify();
+                            ThreadStudyDemoActivity.this.wait();
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }

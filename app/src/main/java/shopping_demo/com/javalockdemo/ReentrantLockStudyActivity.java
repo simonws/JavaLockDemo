@@ -10,7 +10,7 @@ import android.util.Log;
  * Created by ws on 18-3-8.
  */
 
-public class LockStudyActivity extends Activity {
+public class ReentrantLockStudyActivity extends Activity {
     private String TAG = "LockStudy_Activity";
 
     @Override

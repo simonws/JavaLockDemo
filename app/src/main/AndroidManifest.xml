@@ -17,8 +17,8 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".LockStudyActivity" />
-        <activity android:name=".ThreadStudyDemo" />
+        <activity android:name=".ReentrantLockStudyActivity" />
+        <activity android:name=".ThreadStudyDemoActivity" />
         
     </application>
 

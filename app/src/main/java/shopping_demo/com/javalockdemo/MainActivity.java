@@ -18,13 +18,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.barraier:
                 Intent barraier_intent = new Intent();
-                barraier_intent.setClassName(this, ThreadStudyDemo.class.getName());
+                barraier_intent.setClassName(this, ThreadStudyDemoActivity.class.getName());
                 startActivity(barraier_intent);
                 break;
             case R.id.re_entry_lock:
 
                 Intent intent = new Intent();
-                intent.setClassName(this, LockStudyActivity.class.getName());
+                intent.setClassName(this, ReentrantLockStudyActivity.class.getName());
                 startActivity(intent);
                 break;
             default:
