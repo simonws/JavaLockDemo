@@ -2,12 +2,12 @@ package shopping_demo.com.javalockdemo;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Semaphore;
 
 /**
  * Created by ws on 18-2-24.
@@ -17,7 +17,7 @@ public class ThreadStudyDemoActivity extends Activity implements View.OnClickLis
     private static final String TAG = "ThreadStudy_Demo";
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.common_lock_layout);
         super.onCreate(savedInstanceState);
     }
@@ -50,12 +50,43 @@ public class ThreadStudyDemoActivity extends Activity implements View.OnClickLis
                 yieldThread1.start();
                 yieldThread2.start();
                 break;
+
+            case R.id.Semaphore:
+                int N = 8;            //工人数
+                Semaphore semaphore = new Semaphore(5); //机器数目
+                for (int i = 0; i < N; i++)
+                    new Worker(i, semaphore).start();
+                break;
             default:
                 break;
 
 
         }
     }
+
+    static class Worker extends Thread {
+        private int num;
+        private Semaphore semaphore;
+
+        public Worker(int num, Semaphore semaphore) {
+            this.num = num;
+            this.semaphore = semaphore;
+        }
+
+        @Override
+        public void run() {
+            try {
+                semaphore.acquire();
+                Log.d(TAG, "工人" + this.num + "占用一个机器在生产...");
+                Thread.sleep(2000);
+                Log.d(TAG, "工人" + this.num + "释放出机器");
+                semaphore.release();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
 
     static class CountDownReadNum implements Runnable {
         private int id;

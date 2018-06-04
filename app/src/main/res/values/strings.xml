@@ -4,4 +4,5 @@
     <string name="entry_lock">重入锁</string>
     <string name="count_down_latcher">countdown_latcher</string>
     <string name="yield">yield</string>
+    <string name="Semaphore">Semaphore</string>
 </resources>

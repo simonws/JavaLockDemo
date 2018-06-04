@@ -3,7 +3,6 @@ package shopping_demo.com.javalockdemo;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.PersistableBundle;
-import android.support.annotation.Nullable;
 import android.util.Log;
 
 /**
@@ -14,7 +13,7 @@ public class ReentrantLockStudyActivity extends Activity {
     private String TAG = "LockStudy_Activity";
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState, @Nullable PersistableBundle persistentState) {
+    public void onCreate( Bundle savedInstanceState,  PersistableBundle persistentState) {
         setContentView(R.layout.lock_activity_layout);
         super.onCreate(savedInstanceState, persistentState);
     }
